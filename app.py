@@ -105,7 +105,7 @@ def show_navbar():
     col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 1, 1, 1, 1, 1, 1])
     
     with col1:
-        st.markdown("## 🏋️ Level-Up Fitness")
+        st.markdown("##Fitness Tracker")
     
     # Navigation buttons
     nav_items = {
@@ -119,32 +119,32 @@ def show_navbar():
     # Create navigation buttons
     if st.session_state.logged_in:
         with col2:
-            if st.button("🏠 Profile", use_container_width=True):
+            if st.button("Profile", use_container_width=True):
                 st.session_state.current_page = "profile"
                 st.rerun()
         
         with col3:
-            if st.button("💪 Workout", use_container_width=True):
+            if st.button("Workout", use_container_width=True):
                 st.session_state.current_page = "workout"
                 st.rerun()
         
         with col4:
-            if st.button("🍎 Meal", use_container_width=True):
+            if st.button("Meal", use_container_width=True):
                 st.session_state.current_page = "meal"
                 st.rerun()
         
         with col5:
-            if st.button("📈 Progress", use_container_width=True):
+            if st.button("Progress", use_container_width=True):
                 st.session_state.current_page = "progress"
                 st.rerun()
         
         with col6:
-            if st.button("⚙️ Settings", use_container_width=True):
+            if st.button("Settings", use_container_width=True):
                 st.session_state.current_page = "settings"
                 st.rerun()
         
         with col7:
-            if st.button("🚪 Logout", use_container_width=True, type="secondary"):
+            if st.button("Logout", use_container_width=True, type="secondary"):
                 st.session_state.logged_in = False
                 st.session_state.user = None
                 st.session_state.profile = None
@@ -157,7 +157,7 @@ def show_navbar():
 def show_user_info():
     """Show user info in a compact widget"""
     if st.session_state.logged_in and st.session_state.profile:
-        with st.expander(f"👤 {st.session_state.user['username']}'s Stats", expanded=False):
+        with st.expander(f"{st.session_state.user['username']}'s Stats", expanded=False):
             col1, col2, col3 = st.columns(3)
             with col1:
                 st.metric("Current Weight", f"{st.session_state.profile.get('weight', 0)} kg")
@@ -170,7 +170,7 @@ def show_user_info():
 # -------------------- Authentication Pages --------------------
 def show_login():
     """Login page"""
-    st.title("🔐 Login to Level-Up Fitness")
+    st.title("Login")
     
     col1, col2, col3 = st.columns([1, 2, 1])
     
@@ -203,7 +203,7 @@ def show_login():
 
 def show_signup():
     """Signup page"""
-    st.title("📝 Create Account")
+    st.title("Create Account")
     
     col1, col2, col3 = st.columns([1, 2, 1])
     
@@ -238,7 +238,7 @@ def show_signup():
 # -------------------- Main App Pages --------------------
 def show_profile():
     """Profile page"""
-    st.title("👤 Profile Settings")
+    st.title("Profile Settings")
     
     if not st.session_state.profile:
         st.session_state.profile = {

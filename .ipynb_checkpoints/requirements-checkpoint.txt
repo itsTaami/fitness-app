@@ -1,21 +1,17 @@
-# Core dependencies
-streamlit==1.31.1
-supabase==2.4.1
-pandas==2.2.0
-python-dotenv==1.0.0
-requests==2.31.0
+streamlit
+supabase
+pandas
+python-dotenv
+requests
 
-# Optional data analysis/visualization
-numpy==1.24.3
-plotly==5.18.0
-matplotlib==3.7.5
+numpy
+plotly
+matplotlib
 
-# Optional for enhanced functionality
-openai==1.12.0  # If you want to add OpenAI support later
-python-dateutil==2.8.2  # For date handling
-pytz==2024.1  # Timezone support
+openai
+python-dateutil
+pytz
 
-# Development tools (for local development)
-black==23.12.1
-flake8==7.0.0
-pytest==8.0.0
+black
+flake8
+pytest

@@ -105,7 +105,7 @@ def show_navbar():
     col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 1, 1, 1, 1, 1, 1])
     
     with col1:
-        st.markdown("##Fitness Tracker")
+        st.markdown("## Fitness Tracker")
     
     # Navigation buttons
     nav_items = {

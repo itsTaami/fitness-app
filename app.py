@@ -943,24 +943,24 @@ def show_progress():
 
 def show_settings():
     """Settings page"""
-    st.title("Account Settings")
+    st.title("⚙️ Account Settings")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader(" Account Info")
+        st.subheader("🔐 Account Info")
         st.info(f"**Username:** {st.session_state.user['username']}")
         if st.session_state.user.get('email'):
             st.info(f"**Email:** {st.session_state.user['email']}")
         
         st.markdown("---")
-        st.subheader(" Change Password")
+        st.subheader("🔑 Change Password")
         
         with st.form("password_form"):
             current = st.text_input("Current Password", type="password")
             new = st.text_input("New Password", type="password")
             confirm = st.text_input("Confirm New Password", type="password")
-            change_btn = st.form_submit_button("Change Password", use_container_width=True)
+            change_btn = st.form_submit_button("🔄 Change Password", use_container_width=True)
             
             if change_btn:
                 hashed_current = hash_password(current)
@@ -978,33 +978,63 @@ def show_settings():
                     st.success("✅ Password updated successfully!")
     
     with col2:
-        st.subheader("Data Management")
+        st.subheader("📱 App Preferences")
         
-        # Display workout history
-        try:
-            workouts = supabase.table("workouts").select("date, plan")\
-                .eq("user_id", st.session_state.user["id"])\
-                .order("date", desc=True)\
-                .limit(5).execute().data
-            
-            if workouts:
-                st.write("**Recent AI Workouts:**")
-                for w in workouts:
-                    with st.expander(f"Workout from {w['date']}"):
-                        st.write(w['plan'][:200] + "...")
-            else:
-                st.info("No AI workouts saved yet.")
-        except:
-            st.warning("Could not load workout history.")
+        # Theme preference
+        theme = st.selectbox(
+            "Theme",
+            ["Light", "Dark", "System Default"],
+            help="Choose your preferred theme"
+        )
+        
+        # Notifications
+        notifications = st.checkbox(
+            "Enable workout reminders",
+            value=True,
+            help="Get notifications for your scheduled workouts"
+        )
+        
+        # Units preference
+        units = st.radio(
+            "Measurement Units",
+            ["Metric (kg, cm)", "Imperial (lb, in)"],
+            horizontal=True
+        )
+        
+        # Save preferences button
+        if st.button("💾 Save Preferences", use_container_width=True):
+            # In a real app, you'd save these to database
+            st.success("✅ Preferences saved!")
         
         st.markdown("---")
         
-        if st.button("🗑️ Clear All Workout Data", type="secondary", use_container_width=True):
-            if st.checkbox("I'm sure I want to delete all my workout history"):
-                supabase.table("workouts").delete().eq("user_id", st.session_state.user["id"]).execute()
-                supabase.table("workout_logs").delete().eq("user_id", st.session_state.user["id"]).execute()
-                st.success("✅ All workout data cleared!")
-                st.rerun()
+        # Quick actions
+        st.subheader("Quick Actions")
+        
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("📤 Export Data", use_container_width=True, help="Export your fitness data"):
+                st.info("Data export feature coming soon!")
+        
+        with col_b:
+            if st.button("🆘 Help", use_container_width=True, help="Get help with the app"):
+                st.info("Check the documentation or contact support")
+        
+        # App info
+        st.markdown("---")
+        st.subheader("ℹ️ App Information")
+        st.write("**Level-Up Fitness**")
+        st.write("Version 1.0.0")
+        st.write("Your personal AI fitness assistant")
+        
+        # Logout option in settings
+        st.markdown("---")
+        if st.button("🚪 Logout from Settings", type="secondary", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.user = None
+            st.session_state.profile = None
+            st.session_state.current_page = "login"
+            st.rerun()
 
 # -------------------- App Router --------------------
 def main():

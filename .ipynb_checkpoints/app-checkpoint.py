@@ -976,41 +976,6 @@ def show_settings():
                         .eq("id", st.session_state.user["id"]).execute()
                     st.session_state.user['password'] = hashed_new
                     st.success("✅ Password updated successfully!")
-    
-    with col2:
-        st.subheader("📱 App Preferences")
-        
-        # Theme preference
-        theme = st.selectbox(
-            "Theme",
-            ["Light", "Dark", "System Default"],
-            help="Choose your preferred theme"
-        )
-        
-        
-        # Units preference
-        units = st.radio(
-            "Measurement Units",
-            ["Metric (kg, cm)", "Imperial (lb, in)"],
-            horizontal=True
-        )
-        
-        # Save preferences button
-        if st.button("💾 Save Preferences", use_container_width=True):
-            # In a real app, you'd save these to database
-            st.success("✅ Preferences saved!")
-        
-        st.markdown("---")
-        
-        
-        # Logout option in settings
-        st.markdown("---")
-        if st.button("🚪 Logout from Settings", type="secondary", use_container_width=True):
-            st.session_state.logged_in = False
-            st.session_state.user = None
-            st.session_state.profile = None
-            st.session_state.current_page = "login"
-            st.rerun()
 
 # -------------------- App Router --------------------
 def main():

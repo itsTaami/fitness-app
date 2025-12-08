@@ -184,37 +184,37 @@ def show_navbar():
     col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 1, 1, 1, 1, 1, 1])
     
     with col1:
-        st.markdown("## 🏋️ Level-Up Fitness")
+        st.markdown("## Fitness-app")
     
     # Navigation buttons
     if st.session_state.logged_in:
         with col2:
-            if st.button("🏠 Profile", use_container_width=True):
+            if st.button(" Profile", use_container_width=True):
                 st.session_state.current_page = "profile"
                 st.rerun()
         
         with col3:
-            if st.button("📝 Workout Log", use_container_width=True):
+            if st.button(" Workout Log", use_container_width=True):
                 st.session_state.current_page = "workout_log"
                 st.rerun()
         
         with col4:
-            if st.button("💪 AI Workout", use_container_width=True):
+            if st.button(" AI Workout", use_container_width=True):
                 st.session_state.current_page = "ai_workout"
                 st.rerun()
         
         with col5:
-            if st.button("🍎 AI Meal", use_container_width=True):
+            if st.button(" AI Meal", use_container_width=True):
                 st.session_state.current_page = "ai_meal"
                 st.rerun()
         
         with col6:
-            if st.button("📈 Progress", use_container_width=True):
+            if st.button(" Progress", use_container_width=True):
                 st.session_state.current_page = "progress"
                 st.rerun()
         
         with col7:
-            if st.button("⚙️ Settings", use_container_width=True):
+            if st.button(" Settings", use_container_width=True):
                 st.session_state.current_page = "settings"
                 st.rerun()
     
@@ -224,7 +224,7 @@ def show_navbar():
 def show_user_info():
     """Show user info in a compact widget"""
     if st.session_state.logged_in and st.session_state.profile:
-        with st.expander(f"👤 {st.session_state.user['username']}'s Stats", expanded=False):
+        with st.expander(f" {st.session_state.user['username']}'s Stats", expanded=False):
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.metric("Current Weight", f"{st.session_state.profile.get('weight', 0)} kg")
@@ -243,7 +243,7 @@ def show_user_info():
 # -------------------- Authentication Pages --------------------
 def show_login():
     """Login page"""
-    st.title("🔐 Login to Level-Up Fitness")
+    st.title(" Login ")
     
     col1, col2, col3 = st.columns([1, 2, 1])
     
@@ -276,7 +276,7 @@ def show_login():
 
 def show_signup():
     """Signup page"""
-    st.title("📝 Create Account")
+    st.title(" Create Account")
     
     col1, col2, col3 = st.columns([1, 2, 1])
     
@@ -311,10 +311,10 @@ def show_signup():
 # -------------------- Workout Log/To-Do List Page --------------------
 def show_workout_log():
     """Workout log/to-do list page"""
-    st.title("📝 Workout Tracker")
+    st.title(" Workout Tracker")
     
     if not st.session_state.profile:
-        st.warning("⚠️ Please fill out your profile first!")
+        st.warning(" Please fill out your profile first!")
         return
     
     # Date selector
@@ -333,7 +333,7 @@ def show_workout_log():
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.subheader("➕ Add Exercise")
+        st.subheader(" Add Exercise")
         with st.form("add_exercise_form"):
             # Exercise selection with autocomplete
             exercise = st.selectbox(
@@ -373,13 +373,13 @@ def show_workout_log():
                 
                 saved = save_workout_log(st.session_state.user["id"], exercise_data)
                 if saved:
-                    st.success(f"✅ Added {sets}x{reps} {exercise} to your workout!")
+                    st.success(f" Added {sets}x{reps} {exercise} to your workout!")
                     st.rerun()
                 else:
-                    st.error("❌ Failed to save exercise")
+                    st.error(" Failed to save exercise")
     
     with col2:
-        st.subheader(f"📋 Today's Workout ({selected_date})")
+        st.subheader(f" Today's Workout ({selected_date})")
         
         # Get today's workout logs
         workout_logs = get_workout_logs(st.session_state.user["id"], selected_date)
@@ -407,9 +407,9 @@ def show_workout_log():
                         notes_text = f" - {log['notes']}" if log.get('notes') else ""
                         
                         if log.get('completed', False):
-                            st.markdown(f"✅ **{log['exercise']}**: {log['sets']}x{log['reps']}{weight_text}{notes_text}")
+                            st.markdown(f" **{log['exercise']}**: {log['sets']}x{log['reps']}{weight_text}{notes_text}")
                         else:
-                            st.markdown(f"⬜ **{log['exercise']}**: {log['sets']}x{log['reps']}{weight_text}{notes_text}")
+                            st.markdown(f" **{log['exercise']}**: {log['sets']}x{log['reps']}{weight_text}{notes_text}")
                     
                     with col2:
                         # Toggle completion
@@ -436,7 +436,7 @@ def show_workout_log():
     
     # Weekly summary
     st.markdown("---")
-    st.subheader("📊 Weekly Summary")
+    st.subheader("Weekly Summary")
     
     weekly_logs = get_workout_summary(st.session_state.user["id"], days=7)
     
@@ -465,10 +465,10 @@ def show_workout_log():
 # -------------------- AI Workout Generator Page --------------------
 def show_ai_workout():
     """AI Workout generator page"""
-    st.title("💪 AI Workout Generator")
+    st.title(" Workout Generator")
     
     if not st.session_state.profile or not st.session_state.profile.get("name"):
-        st.warning("⚠️ Please fill out your profile first!")
+        st.warning("Please fill out your profile first!")
         return
     
     with st.container():
@@ -483,7 +483,7 @@ def show_ai_workout():
                 equipment = st.multiselect("Equipment", ["Bodyweight", "Dumbbells", "Bands"], default=["Bodyweight"])
                 days = st.slider("Days per week", 2, 6, 3)
                 notes = st.text_area("Notes", "")
-                generate = st.form_submit_button("🚀 Generate Workout", use_container_width=True)
+                generate = st.form_submit_button(" Generate Workout", use_container_width=True)
         
         with col2:
             if st.session_state.profile:
@@ -494,7 +494,7 @@ def show_ai_workout():
                 st.write(f"**Height:** {st.session_state.profile.get('height', 'Not set')} cm")
     
     if generate:
-        with st.spinner("🤖 Generating your personalized workout plan..."):
+        with st.spinner("Generating your personalized workout plan..."):
             try:
                 prompt = build_workout_prompt(
                     st.session_state.profile, goal, duration, level, 
@@ -503,7 +503,8 @@ def show_ai_workout():
                 result = call_groq(prompt)
                 
                 if result.startswith("❌"):
-                    st.error(result)
+                    st.er
+                    ror(result)
                 else:
                     st.success("✅ Workout Generated!")
                     st.markdown("---")
@@ -517,7 +518,7 @@ def show_ai_workout():
                     }).execute()
                     
                     # Parse AI workout and suggest adding to workout log
-                    st.info("💡 **Quick Add to Workout Log**")
+                    st.info(" **Quick Add to Workout Log**")
                     st.write("Want to add these exercises to your workout log?")
                     
                     # Simple parser to extract exercises (this is basic - you can enhance it)
@@ -553,7 +554,7 @@ def show_ai_workout():
                                         continue
                     
             except Exception as e:
-                st.error(f"❌ Error generating workout: {e}")
+                st.error(f"Error generating workout: {e}")
 
 # -------------------- Other Pages (Profile, AI Meal, Progress, Settings) --------------------
 # [Keep the existing show_profile(), show_ai_meal(), show_progress(), show_settings() functions]
@@ -561,7 +562,7 @@ def show_ai_workout():
 
 def show_profile():
     """Profile page"""
-    st.title("👤 Profile Settings")
+    st.title(" Profile Settings")
     
     if not st.session_state.profile:
         st.session_state.profile = {
@@ -592,7 +593,7 @@ def show_profile():
             target_weight = st.number_input("Target Weight (kg)", 20.0, 300.0, 
                                           value=safe_float(st.session_state.profile.get("target_weight", weight)))
         
-        submit_profile = st.form_submit_button("💾 Save Profile", use_container_width=True)
+        submit_profile = st.form_submit_button(" Save Profile", use_container_width=True)
     
     if submit_profile:
         profile_data = {
@@ -607,16 +608,16 @@ def show_profile():
         saved_profile = save_user_profile(st.session_state.user["id"], profile_data)
         if saved_profile:
             st.session_state.profile = saved_profile
-            st.success("✅ Profile saved successfully!")
+            st.success(" Profile saved successfully!")
         else:
-            st.error("❌ Failed to save profile")
+            st.error(" Failed to save profile")
 
 def show_ai_meal():
     """AI Meal Plan Generator page"""
-    st.title("🍎 AI Meal Plan Generator")
+    st.title("Meal Plan Generator")
     
     if not st.session_state.profile or not st.session_state.profile.get("name"):
-        st.warning("⚠️ Please fill out your profile first!")
+        st.warning("Please fill out your profile first!")
         return
     
     with st.container():
@@ -630,7 +631,7 @@ def show_ai_meal():
                 cuisine = st.selectbox("Cuisine", ["Any", "Asian", "Mediterranean", "Japanese"])
                 restrictions = st.multiselect("Restrictions", ["None", "Gluten-free", "Dairy-free", "Nut-free"])
                 notes = st.text_area("Notes", "")
-                generate_meal = st.form_submit_button("🚀 Generate Meal Plan", use_container_width=True)
+                generate_meal = st.form_submit_button("Generate Meal Plan", use_container_width=True)
         
         with col2:
             if st.session_state.profile:
@@ -644,7 +645,7 @@ def show_ai_meal():
         if restrictions == ["None"]:
             restrictions = []
             
-        with st.spinner("🤖 Generating your personalized meal plan..."):
+        with st.spinner("Generating your personalized meal plan..."):
             try:
                 prompt = build_meal_prompt(
                     st.session_state.profile, goal, diet_type, meals_per_day, 
@@ -655,7 +656,7 @@ def show_ai_meal():
                 if result.startswith("❌"):
                     st.error(result)
                 else:
-                    st.success("✅ Meal Plan Generated!")
+                    st.success(" Meal Plan Generated!")
                     st.markdown("---")
                     st.markdown(result)
                     
@@ -667,14 +668,14 @@ def show_ai_meal():
                     }).execute()
                     
             except Exception as e:
-                st.error(f"❌ Error generating meal plan: {e}")
+                st.error(f" Error generating meal plan: {e}")
 
 def show_progress():
     """Progress tracking page"""
-    st.title("📈 Progress Dashboard")
+    st.title("Progress Dashboard")
     
     if not st.session_state.profile:
-        st.warning("⚠️ Please save your profile first!")
+        st.warning(" Please save your profile first!")
         return
     
     # Tabs for different progress metrics
@@ -703,21 +704,21 @@ def show_progress():
                 display_df = display_df.sort_values("date", ascending=False)
                 st.dataframe(display_df.head(10), use_container_width=True, hide_index=True)
             else:
-                st.info("📊 No weight data yet.")
+                st.info(" No weight data yet.")
                 
         except Exception as e:
-            st.error(f"❌ Error loading weight data: {e}")
+            st.error(f" Error loading weight data: {e}")
         
         # Weight entry form
         with st.form("weight_form"):
-            st.subheader("➕ Add New Weight Entry")
+            st.subheader(" Add New Weight Entry")
             current_weight = st.session_state.profile.get("weight", 60)
             col1, col2 = st.columns([3, 1])
             with col1:
                 new_weight = st.number_input("Current Weight (kg)", 20.0, 300.0, 
                                             value=safe_float(current_weight), label_visibility="collapsed")
             with col2:
-                add_weight = st.form_submit_button("➕ Add Entry", use_container_width=True)
+                add_weight = st.form_submit_button(" Add Entry", use_container_width=True)
         
         if add_weight:
             try:
@@ -737,11 +738,11 @@ def show_progress():
                     
                     st.session_state.profile["weight"] = new_weight
                 
-                st.success("✅ Weight added!")
+                st.success(" Weight added!")
                 st.rerun()
                 
             except Exception as e:
-                st.error(f"❌ Error saving weight: {e}")
+                st.error(f" Error saving weight: {e}")
     
     with tab2:
         # Workout progress
@@ -801,24 +802,24 @@ def show_progress():
 
 def show_settings():
     """Settings page"""
-    st.title("⚙️ Account Settings")
+    st.title("Account Settings")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("🔐 Account Info")
+        st.subheader(" Account Info")
         st.info(f"**Username:** {st.session_state.user['username']}")
         if st.session_state.user.get('email'):
             st.info(f"**Email:** {st.session_state.user['email']}")
         
         st.markdown("---")
-        st.subheader("🔑 Change Password")
+        st.subheader(" Change Password")
         
         with st.form("password_form"):
             current = st.text_input("Current Password", type="password")
             new = st.text_input("New Password", type="password")
             confirm = st.text_input("Confirm New Password", type="password")
-            change_btn = st.form_submit_button("🔄 Change Password", use_container_width=True)
+            change_btn = st.form_submit_button("Change Password", use_container_width=True)
             
             if change_btn:
                 hashed_current = hash_password(current)
@@ -836,7 +837,7 @@ def show_settings():
                     st.success("✅ Password updated successfully!")
     
     with col2:
-        st.subheader("📊 Data Management")
+        st.subheader("Data Management")
         
         # Display workout history
         try:

@@ -200,12 +200,12 @@ def show_navbar():
                 st.rerun()
         
         with cols[3]:
-            if st.button(" AI", use_container_width=True, key="nav_ai_workout"):
+            if st.button(" AI Workout", use_container_width=True, key="nav_ai_workout"):
                 st.session_state.current_page = "ai_workout"
                 st.rerun()
         
         with cols[4]:
-            if st.button(" Meal", use_container_width=True, key="nav_ai_meal"):
+            if st.button("AI Meal", use_container_width=True, key="nav_ai_meal"):
                 st.session_state.current_page = "ai_meal"
                 st.rerun()
         

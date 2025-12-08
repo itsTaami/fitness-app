@@ -185,7 +185,7 @@ def show_navbar():
     cols = st.columns([2, 1, 1, 1, 1, 1, 1, 1])
     
     with cols[0]:
-        st.markdown("## 🏋️ Level-Up Fitness")
+        st.markdown("## Fitness App")
     
     # Navigation buttons - now using all columns
     if st.session_state.logged_in:

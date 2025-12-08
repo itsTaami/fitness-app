@@ -190,38 +190,38 @@ def show_navbar():
     # Navigation buttons - now using all columns
     if st.session_state.logged_in:
         with cols[1]:
-            if st.button("🏠 Profile", use_container_width=True, key="nav_profile"):
+            if st.button(" Profile", use_container_width=True, key="nav_profile"):
                 st.session_state.current_page = "profile"
                 st.rerun()
         
         with cols[2]:
-            if st.button("📝 Log", use_container_width=True, key="nav_workout_log"):
+            if st.button(" Log", use_container_width=True, key="nav_workout_log"):
                 st.session_state.current_page = "workout_log"
                 st.rerun()
         
         with cols[3]:
-            if st.button("💪 AI", use_container_width=True, key="nav_ai_workout"):
+            if st.button(" AI", use_container_width=True, key="nav_ai_workout"):
                 st.session_state.current_page = "ai_workout"
                 st.rerun()
         
         with cols[4]:
-            if st.button("🍎 Meal", use_container_width=True, key="nav_ai_meal"):
+            if st.button(" Meal", use_container_width=True, key="nav_ai_meal"):
                 st.session_state.current_page = "ai_meal"
                 st.rerun()
         
         with cols[5]:
-            if st.button("📈 Stats", use_container_width=True, key="nav_progress"):
+            if st.button(" Stats", use_container_width=True, key="nav_progress"):
                 st.session_state.current_page = "progress"
                 st.rerun()
         
         with cols[6]:
-            if st.button("⚙️ Settings", use_container_width=True, key="nav_settings", 
+            if st.button(" Settings", use_container_width=True, key="nav_settings", 
                         help="Settings"):
                 st.session_state.current_page = "settings"
                 st.rerun()
         
         with cols[7]:
-            if st.button("🚪Гарах", use_container_width=True, key="nav_logout",
+            if st.button("Гарах", use_container_width=True, key="nav_logout",
                         help="Logout", type="secondary"):
                 st.session_state.logged_in = False
                 st.session_state.user = None
@@ -476,10 +476,10 @@ def show_workout_log():
 # -------------------- AI Workout Generator Page --------------------
 def show_ai_workout():
     """AI Workout generator page"""
-    st.title("💪 AI Workout Generator")
+    st.title(" AI Workout Generator")
     
     if not st.session_state.profile or not st.session_state.profile.get("name"):
-        st.warning("⚠️ Please fill out your profile first!")
+        st.warning(" Please fill out your profile first!")
         return
     
     with st.container():
@@ -494,7 +494,7 @@ def show_ai_workout():
                 equipment = st.multiselect("Equipment", ["Bodyweight", "Dumbbells", "Bands"], default=["Bodyweight"])
                 days = st.slider("Days per week", 2, 6, 3)
                 notes = st.text_area("Notes", "")
-                generate = st.form_submit_button("🚀 Generate Workout", use_container_width=True)
+                generate = st.form_submit_button(" Generate Workout", use_container_width=True)
         
         with col2:
             if st.session_state.profile:
@@ -505,7 +505,7 @@ def show_ai_workout():
                 st.write(f"**Height:** {st.session_state.profile.get('height', 'Not set')} cm")
     
     if generate:
-        with st.spinner("🤖 Generating your personalized workout plan..."):
+        with st.spinner(" Generating your personalized workout plan..."):
             try:
                 prompt = build_workout_prompt(
                     st.session_state.profile, goal, duration, level, 
@@ -516,7 +516,7 @@ def show_ai_workout():
                 if result.startswith("❌"):
                     st.error(result)
                 else:
-                    st.success("✅ Workout Generated!")
+                    st.success(" Workout Generated!")
                     st.markdown("---")
                     st.markdown(result)
                     
@@ -534,7 +534,7 @@ def show_ai_workout():
                     show_workout_parsing_options(result)
                     
             except Exception as e:
-                st.error(f"❌ Error generating workout: {e}")
+                st.error(f" Error generating workout: {e}")
     elif hasattr(st.session_state, 'generated_workout'):
         # Show previously generated workout
         st.markdown(st.session_state.generated_workout)
@@ -543,7 +543,7 @@ def show_ai_workout():
 def show_workout_parsing_options(workout_text):
     """Parse workout text and show options to add to log"""
     st.markdown("---")
-    st.subheader("📝 Add Exercises to Workout Log")
+    st.subheader(" Add Exercises to Workout Log")
     
     # Parse exercises from the workout text
     exercises = parse_exercises_from_workout(workout_text)
@@ -600,9 +600,9 @@ def show_workout_parsing_options(workout_text):
             
             col1, col2 = st.columns([1, 1])
             with col1:
-                add_all_btn = st.form_submit_button("➕ Add Selected to Log", use_container_width=True)
+                add_all_btn = st.form_submit_button(" Add Selected to Log", use_container_width=True)
             with col2:
-                add_today_btn = st.form_submit_button("📅 Add for Today", use_container_width=True)
+                add_today_btn = st.form_submit_button(" Add for Today", use_container_width=True)
             
             if add_all_btn or add_today_btn:
                 if add_today_btn:
@@ -948,34 +948,34 @@ def show_settings():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("🔐 Account Info")
+        st.subheader(" Account Info")
         st.info(f"**Username:** {st.session_state.user['username']}")
         if st.session_state.user.get('email'):
             st.info(f"**Email:** {st.session_state.user['email']}")
         
         st.markdown("---")
-        st.subheader("🔑 Change Password")
+        st.subheader(" Change Password")
         
         with st.form("password_form"):
             current = st.text_input("Current Password", type="password")
             new = st.text_input("New Password", type="password")
             confirm = st.text_input("Confirm New Password", type="password")
-            change_btn = st.form_submit_button("🔄 Change Password", use_container_width=True)
+            change_btn = st.form_submit_button(" Change Password", use_container_width=True)
             
             if change_btn:
                 hashed_current = hash_password(current)
                 if hashed_current != st.session_state.user['password']:
-                    st.error("❌ Current password is incorrect")
+                    st.error(" Current password is incorrect")
                 elif new != confirm:
-                    st.error("❌ New passwords don't match")
+                    st.error(" New passwords don't match")
                 elif not new:
-                    st.error("❌ New password cannot be empty")
+                    st.error(" New password cannot be empty")
                 else:
                     hashed_new = hash_password(new)
                     supabase.table("users").update({"password": hashed_new})\
                         .eq("id", st.session_state.user["id"]).execute()
                     st.session_state.user['password'] = hashed_new
-                    st.success("✅ Password updated successfully!")
+                    st.success(" Password updated successfully!")
 
 # -------------------- App Router --------------------
 def main():

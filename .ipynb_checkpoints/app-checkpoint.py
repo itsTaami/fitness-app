@@ -987,12 +987,6 @@ def show_settings():
             help="Choose your preferred theme"
         )
         
-        # Notifications
-        notifications = st.checkbox(
-            "Enable workout reminders",
-            value=True,
-            help="Get notifications for your scheduled workouts"
-        )
         
         # Units preference
         units = st.radio(

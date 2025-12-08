@@ -476,10 +476,10 @@ def show_workout_log():
 # -------------------- AI Workout Generator Page --------------------
 def show_ai_workout():
     """AI Workout generator page"""
-    st.title(" Workout Generator")
+    st.title("💪 AI Workout Generator")
     
     if not st.session_state.profile or not st.session_state.profile.get("name"):
-        st.warning("Please fill out your profile first!")
+        st.warning("⚠️ Please fill out your profile first!")
         return
     
     with st.container():
@@ -494,7 +494,7 @@ def show_ai_workout():
                 equipment = st.multiselect("Equipment", ["Bodyweight", "Dumbbells", "Bands"], default=["Bodyweight"])
                 days = st.slider("Days per week", 2, 6, 3)
                 notes = st.text_area("Notes", "")
-                generate = st.form_submit_button(" Generate Workout", use_container_width=True)
+                generate = st.form_submit_button("🚀 Generate Workout", use_container_width=True)
         
         with col2:
             if st.session_state.profile:
@@ -505,7 +505,7 @@ def show_ai_workout():
                 st.write(f"**Height:** {st.session_state.profile.get('height', 'Not set')} cm")
     
     if generate:
-        with st.spinner("Generating your personalized workout plan..."):
+        with st.spinner("🤖 Generating your personalized workout plan..."):
             try:
                 prompt = build_workout_prompt(
                     st.session_state.profile, goal, duration, level, 
@@ -514,8 +514,7 @@ def show_ai_workout():
                 result = call_groq(prompt)
                 
                 if result.startswith("❌"):
-                    st.er
-                    ror(result)
+                    st.error(result)
                 else:
                     st.success("✅ Workout Generated!")
                     st.markdown("---")
@@ -528,44 +527,175 @@ def show_ai_workout():
                         "plan": result
                     }).execute()
                     
-                    # Parse AI workout and suggest adding to workout log
-                    st.info(" **Quick Add to Workout Log**")
-                    st.write("Want to add these exercises to your workout log?")
+                    # Store the generated workout in session state
+                    st.session_state.generated_workout = result
                     
-                    # Simple parser to extract exercises (this is basic - you can enhance it)
-                    lines = result.split('\n')
-                    for line in lines:
-                        if 'x' in line and ('reps' in line.lower() or '×' in line):
-                            parts = line.split()
-                            for part in parts:
-                                if 'x' in part or '×' in part:
-                                    try:
-                                        sets_reps = part.replace('×', 'x')
-                                        exercise = ' '.join(parts[parts.index(part)+1:])[:30]
-                                        if exercise and len(exercise) > 2:
-                                            col1, col2 = st.columns([3, 1])
-                                            with col1:
-                                                st.write(f"{sets_reps} {exercise}")
-                                            with col2:
-                                                if st.button("➕ Add", key=f"add_{hash(exercise)}"):
-                                                    # Parse sets and reps
-                                                    if 'x' in sets_reps:
-                                                        s, r = sets_reps.split('x')[:2]
-                                                        exercise_data = {
-                                                            "date": date.today(),
-                                                            "exercise": exercise,
-                                                            "sets": int(s),
-                                                            "reps": int(r),
-                                                            "completed": False
-                                                        }
-                                                        save_workout_log(st.session_state.user["id"], exercise_data)
-                                                        st.success(f"Added {exercise}!")
-                                                        st.rerun()
-                                    except:
-                                        continue
+                    # Parse and show "Add to Log" options
+                    show_workout_parsing_options(result)
                     
             except Exception as e:
-                st.error(f"Error generating workout: {e}")
+                st.error(f"❌ Error generating workout: {e}")
+    elif hasattr(st.session_state, 'generated_workout'):
+        # Show previously generated workout
+        st.markdown(st.session_state.generated_workout)
+        show_workout_parsing_options(st.session_state.generated_workout)
+
+def show_workout_parsing_options(workout_text):
+    """Parse workout text and show options to add to log"""
+    st.markdown("---")
+    st.subheader("📝 Add Exercises to Workout Log")
+    
+    # Parse exercises from the workout text
+    exercises = parse_exercises_from_workout(workout_text)
+    
+    if exercises:
+        st.write(f"Found {len(exercises)} exercise(s). Select which ones to add:")
+        
+        # Create a form for adding exercises
+        with st.form("add_exercises_form"):
+            exercises_to_add = []
+            
+            for i, exercise in enumerate(exercises):
+                col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
+                
+                with col1:
+                    st.write(f"**{exercise['name']}**")
+                
+                with col2:
+                    # Editable sets
+                    sets = st.number_input(
+                        "Sets", 
+                        min_value=1, 
+                        max_value=20, 
+                        value=exercise['sets'],
+                        key=f"sets_{i}",
+                        label_visibility="collapsed"
+                    )
+                
+                with col3:
+                    # Editable reps
+                    reps = st.number_input(
+                        "Reps", 
+                        min_value=1, 
+                        max_value=100, 
+                        value=exercise['reps'],
+                        key=f"reps_{i}",
+                        label_visibility="collapsed"
+                    )
+                
+                with col4:
+                    # Checkbox to include
+                    include = st.checkbox("Add", value=True, key=f"include_{i}")
+                
+                if include:
+                    exercises_to_add.append({
+                        "name": exercise['name'],
+                        "sets": sets,
+                        "reps": reps,
+                        "notes": f"From AI workout: {exercise.get('notes', '')}"
+                    })
+            
+            # Date selection for adding exercises
+            workout_date = st.date_input("Add exercises for date:", value=date.today())
+            
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                add_all_btn = st.form_submit_button("➕ Add Selected to Log", use_container_width=True)
+            with col2:
+                add_today_btn = st.form_submit_button("📅 Add for Today", use_container_width=True)
+            
+            if add_all_btn or add_today_btn:
+                if add_today_btn:
+                    workout_date = date.today()
+                
+                added_count = 0
+                for exercise in exercises_to_add:
+                    exercise_data = {
+                        "date": workout_date,
+                        "exercise": exercise['name'],
+                        "sets": int(exercise['sets']),
+                        "reps": int(exercise['reps']),
+                        "notes": exercise.get('notes', ""),
+                        "completed": False
+                    }
+                    
+                    saved = save_workout_log(st.session_state.user["id"], exercise_data)
+                    if saved:
+                        added_count += 1
+                
+                if added_count > 0:
+                    st.success(f"✅ Added {added_count} exercise(s) to your workout log!")
+                    st.rerun()
+                else:
+                    st.warning("No exercises were added.")
+    else:
+        st.info("No structured exercises found in the generated workout. You can manually add exercises to your log.")
+
+def parse_exercises_from_workout(workout_text):
+    """Parse exercises from AI-generated workout text"""
+    exercises = []
+    
+    # Common patterns to look for
+    patterns = [
+        r'(\d+)\s*x\s*(\d+)\s+(.+)',  # 3x10 Push-ups
+        r'(\d+)\s*sets\s+of\s+(\d+)\s+(.+)',  # 3 sets of 10 Push-ups
+        r'(\d+)\s*-\s*(\d+)\s+reps?\s+of\s+(.+)',  # 8-12 reps of Squats
+        r'(\d+)\s*×\s*(\d+)\s+(.+)',  # 3×10 Pull-ups (using × character)
+    ]
+    
+    lines = workout_text.split('\n')
+    
+    for line in lines:
+        line = line.strip()
+        
+        # Skip empty lines and section headers
+        if not line or line.startswith('#') or line.startswith('##') or line.startswith('###'):
+            continue
+        
+        # Try each pattern
+        for pattern in patterns:
+            import re
+            match = re.search(pattern, line, re.IGNORECASE)
+            if match:
+                if len(match.groups()) >= 3:
+                    try:
+                        sets = int(match.group(1))
+                        reps = int(match.group(2))
+                        exercise = match.group(3).strip()
+                        
+                        # Clean up exercise name
+                        exercise = exercise.split(',')[0].split('(')[0].split('-')[0].strip()
+                        exercise = exercise.split(' (')[0].strip()
+                        
+                        # Skip if too short or common non-exercise words
+                        skip_words = ['rest', 'minute', 'seconds', 'break', 'warm-up', 'cool down', 'stretch']
+                        if len(exercise) < 3 or any(word in exercise.lower() for word in skip_words):
+                            continue
+                        
+                        exercises.append({
+                            'name': exercise,
+                            'sets': sets,
+                            'reps': reps,
+                            'notes': line
+                        })
+                        break  # Stop trying other patterns for this line
+                    except (ValueError, IndexError):
+                        continue
+        
+        # If no pattern matched, look for exercise names in common lists
+        if not any(pattern in line.lower() for pattern in ['x', 'sets', 'reps', '×']):
+            for common_exercise in COMMON_EXERCISES:
+                if common_exercise.lower() in line.lower() and len(line.split()) <= 5:
+                    # Default sets and reps
+                    exercises.append({
+                        'name': common_exercise,
+                        'sets': 3,
+                        'reps': 10,
+                        'notes': line
+                    })
+                    break
+    
+    return exercises
 
 # -------------------- Other Pages (Profile, AI Meal, Progress, Settings) --------------------
 # [Keep the existing show_profile(), show_ai_meal(), show_progress(), show_settings() functions]

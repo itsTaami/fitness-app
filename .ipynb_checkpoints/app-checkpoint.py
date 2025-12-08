@@ -215,13 +215,13 @@ def show_navbar():
                 st.rerun()
         
         with cols[6]:
-            if st.button("⚙️", use_container_width=True, key="nav_settings", 
+            if st.button("⚙️ Settings", use_container_width=True, key="nav_settings", 
                         help="Settings"):
                 st.session_state.current_page = "settings"
                 st.rerun()
         
         with cols[7]:
-            if st.button("🚪", use_container_width=True, key="nav_logout",
+            if st.button("🚪Гарах", use_container_width=True, key="nav_logout",
                         help="Logout", type="secondary"):
                 st.session_state.logged_in = False
                 st.session_state.user = None

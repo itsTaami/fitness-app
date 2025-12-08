@@ -180,42 +180,53 @@ if 'selected_date' not in st.session_state:
 
 # -------------------- Navbar Component --------------------
 def show_navbar():
-    """Display top navigation bar"""
-    col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 1, 1, 1, 1, 1, 1])
+    """Display top navigation bar with all options"""
+    # Create 8 columns for better spacing
+    cols = st.columns([2, 1, 1, 1, 1, 1, 1, 1])
     
-    with col1:
-        st.markdown("## Fitness-app")
+    with cols[0]:
+        st.markdown("## 🏋️ Level-Up Fitness")
     
-    # Navigation buttons
+    # Navigation buttons - now using all columns
     if st.session_state.logged_in:
-        with col2:
-            if st.button(" Profile", use_container_width=True):
+        with cols[1]:
+            if st.button("🏠 Profile", use_container_width=True, key="nav_profile"):
                 st.session_state.current_page = "profile"
                 st.rerun()
         
-        with col3:
-            if st.button(" Workout Log", use_container_width=True):
+        with cols[2]:
+            if st.button("📝 Log", use_container_width=True, key="nav_workout_log"):
                 st.session_state.current_page = "workout_log"
                 st.rerun()
         
-        with col4:
-            if st.button(" AI Workout", use_container_width=True):
+        with cols[3]:
+            if st.button("💪 AI", use_container_width=True, key="nav_ai_workout"):
                 st.session_state.current_page = "ai_workout"
                 st.rerun()
         
-        with col5:
-            if st.button(" AI Meal", use_container_width=True):
+        with cols[4]:
+            if st.button("🍎 Meal", use_container_width=True, key="nav_ai_meal"):
                 st.session_state.current_page = "ai_meal"
                 st.rerun()
         
-        with col6:
-            if st.button(" Progress", use_container_width=True):
+        with cols[5]:
+            if st.button("📈 Stats", use_container_width=True, key="nav_progress"):
                 st.session_state.current_page = "progress"
                 st.rerun()
         
-        with col7:
-            if st.button(" Settings", use_container_width=True):
+        with cols[6]:
+            if st.button("⚙️", use_container_width=True, key="nav_settings", 
+                        help="Settings"):
                 st.session_state.current_page = "settings"
+                st.rerun()
+        
+        with cols[7]:
+            if st.button("🚪", use_container_width=True, key="nav_logout",
+                        help="Logout", type="secondary"):
+                st.session_state.logged_in = False
+                st.session_state.user = None
+                st.session_state.profile = None
+                st.session_state.current_page = "login"
                 st.rerun()
     
     st.markdown("---")  # Separator line

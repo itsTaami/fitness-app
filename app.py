@@ -1008,24 +1008,6 @@ def show_settings():
         
         st.markdown("---")
         
-        # Quick actions
-        st.subheader("Quick Actions")
-        
-        col_a, col_b = st.columns(2)
-        with col_a:
-            if st.button("📤 Export Data", use_container_width=True, help="Export your fitness data"):
-                st.info("Data export feature coming soon!")
-        
-        with col_b:
-            if st.button("🆘 Help", use_container_width=True, help="Get help with the app"):
-                st.info("Check the documentation or contact support")
-        
-        # App info
-        st.markdown("---")
-        st.subheader("ℹ️ App Information")
-        st.write("**Level-Up Fitness**")
-        st.write("Version 1.0.0")
-        st.write("Your personal AI fitness assistant")
         
         # Logout option in settings
         st.markdown("---")
